@@ -1,8 +1,8 @@
-# JSON Parser in C++
+﻿# JSON Parser in C++
 
 A lightweight, header-based JSON parser implemented in C++ that supports parsing and working with JSON data structures.
 
-## ?? Features
+## Features
 
 - **Complete JSON Support**: Parse all JSON data types
   - Numbers (integers and decimals)
@@ -17,7 +17,7 @@ A lightweight, header-based JSON parser implemented in C++ that supports parsing
 - **Memory Safe**: Leverages `std::unique_ptr` for automatic memory management
 - **Easy to Use**: Simple API for parsing and accessing JSON data
 
-## ?? Table of Contents
+## Table of Contents
 
 - [Project Structure](#project-structure)
 - [Getting Started](#getting-started)
@@ -29,24 +29,24 @@ A lightweight, header-based JSON parser implemented in C++ that supports parsing
 - [Contributing](#contributing)
 - [License](#license)
 
-## ?? Project Structure
+## Project Structure
 
 ```
 JsonParser/
-??? JsonValue.h / .cpp      # Base class for all JSON types
-??? JsonNumber.h / .cpp     # Number type implementation
-??? JsonString.h / .cpp     # String type implementation
-??? JsonBool.h / .cpp       # Boolean type implementation
-??? JsonNull.h / .cpp       # Null type implementation
-??? JsonArray.h / .cpp      # Array type implementation
-??? JsonObject.h / .cpp     # Object type implementation
-??? JsonParser.h / .cpp     # Main parser implementation
-??? main.cpp                # Test/example program
-??? JsonParser.vcxproj      # Visual Studio project file
-??? README.md               # This file
+├── JsonValue.h / .cpp      # Base class for all JSON types
+├── JsonNumber.h / .cpp     # Number type implementation
+├── JsonString.h / .cpp     # String type implementation
+├── JsonBool.h / .cpp       # Boolean type implementation
+├── JsonNull.h / .cpp       # Null type implementation
+├── JsonArray.h / .cpp      # Array type implementation
+├── JsonObject.h / .cpp     # Object type implementation
+├── JsonParser.h / .cpp     # Main parser implementation
+├── main.cpp                # Test/example program
+├── JsonParser.vcxproj      # Visual Studio project file
+└── README.md               # This file
 ```
 
-## ?? Getting Started
+## Getting Started
 
 ### Prerequisites
 
@@ -73,7 +73,7 @@ JsonParser/
    auto result = parser.parse();
    ```
 
-## ?? Usage Examples
+## 💡 Usage Examples
 
 ### Basic Parsing
 
@@ -174,7 +174,7 @@ if (result && result->getType() == JsonType::STRING) {
 }
 ```
 
-## ?? API Reference
+## API Reference
 
 ### JsonParser
 
@@ -274,7 +274,7 @@ public:
 };
 ```
 
-## ?? Building
+## Building
 
 ### Visual Studio
 
@@ -295,18 +295,18 @@ g++ -std=c++17 -o jsonparser main.cpp JsonValue.cpp JsonNumber.cpp JsonString.cp
 ./jsonparser
 ```
 
-## ?? Testing
+## Testing
 
 The `main.cpp` file includes comprehensive tests covering:
 
-- ? Basic types (numbers, strings, booleans, null)
-- ? Simple arrays and objects
-- ? Nested structures
-- ? Mixed-type arrays
-- ? Escape sequences
-- ? Whitespace handling
-- ? Empty objects and arrays
-- ? Complex nested JSON
+- Basic types (numbers, strings, booleans, null)
+- Simple arrays and objects
+- Nested structures
+- Mixed-type arrays
+- Escape sequences
+- Whitespace handling
+- Empty objects and arrays
+- Complex nested JSON
 
 Run the tests:
 
@@ -317,14 +317,6 @@ Run the tests:
 
 Expected output will show parse results for 18 different test cases.
 
-## ?? Known Limitations
-
-1. **Number Precision**: Currently uses `float` instead of `double`, which may lose precision for large numbers
-2. **Scientific Notation**: Does not support exponential notation (e.g., `1.5e10`)
-3. **Unicode**: Limited Unicode escape sequence support (only basic escapes like `\n`, `\t`, `\"`, `\\`)
-4. **Error Messages**: Returns `nullptr` on parse errors without detailed error messages
-5. **Validation**: Limited input validation - malformed JSON may cause undefined behavior
-
 ### Recommended Improvements
 
 - Add bounds checking in all parsing functions
@@ -334,7 +326,7 @@ Expected output will show parse results for 18 different test cases.
 - Use `double` instead of `float` for better precision
 - Add comprehensive input validation
 
-## ?? Contributing
+## Contributing
 
 Contributions are welcome! Here's how you can help:
 
@@ -353,18 +345,18 @@ Contributions are welcome! Here's how you can help:
 - Documentation improvements
 - Unicode support
 
-## ?? License
+## License
 
 This project is available for educational and personal use.
 
-## ?? Author
+## Author
 
 **duc-minh-droid**
 
 - GitHub: [@duc-minh-droid](https://github.com/duc-minh-droid)
 - Repository: [JsonParser](https://github.com/duc-minh-droid/JsonParser)
 
-## ?? Acknowledgments
+## Acknowledgments
 
 - Inspired by JSON.org specification
 - Built as a learning project for C++ and parsing techniques

@@ -25,7 +25,6 @@ A lightweight, header-based JSON parser implemented in C++ that supports parsing
 - [API Reference](#api-reference)
 - [Building](#building)
 - [Testing](#testing)
-- [Known Limitations](#known-limitations)
 - [Contributing](#contributing)
 - [License](#license)
 

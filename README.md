@@ -25,7 +25,6 @@ A lightweight, header-based JSON parser implemented in C++ that supports parsing
 - [API Reference](#api-reference)
 - [Building](#building)
 - [Testing](#testing)
-- [Contributing](#contributing)
 - [License](#license)
 
 ## Project Structure
@@ -316,34 +315,6 @@ Run the tests:
 
 Expected output will show parse results for 18 different test cases.
 
-### Recommended Improvements
-
-- Add bounds checking in all parsing functions
-- Implement proper error handling with descriptive messages
-- Add support for Unicode escape sequences (`\uXXXX`)
-- Support scientific notation in numbers
-- Use `double` instead of `float` for better precision
-- Add comprehensive input validation
-
-## Contributing
-
-Contributions are welcome! Here's how you can help:
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-### Areas for Contribution
-
-- Bug fixes (especially bounds checking and validation)
-- Performance improvements
-- Better error messages
-- Additional test cases
-- Documentation improvements
-- Unicode support
-
 ## License
 
 This project is available for educational and personal use.
@@ -359,7 +330,3 @@ This project is available for educational and personal use.
 
 - Inspired by JSON.org specification
 - Built as a learning project for C++ and parsing techniques
-
----
-
-**Note**: This is an educational project. For production use, consider mature libraries like [nlohmann/json](https://github.com/nlohmann/json) or [RapidJSON](https://github.com/Tencent/rapidjson).

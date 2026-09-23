@@ -1,0 +1,9 @@
+{
+  "server": {
+    "host": "localhost",
+    "port": 8080,
+    "tls": false
+  },
+  "retries": [1, 2.5, 1e3],
+  "owner": null
+}

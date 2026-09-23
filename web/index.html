@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>JsonParser Visualizer</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <div class="brand">
+    <h1>JsonParser <span>recursive descent, one step at a time</span></h1>
+  </div>
+  <nav id="samples" aria-label="Sample inputs"></nav>
+  <label class="load">
+    <input type="file" id="loadTrace" accept=".json,application/json">
+    Load trace&hellip;
+  </label>
+</header>
+
+<section class="controls">
+  <button id="btnStart" title="First step (Home)">&#x23EE;</button>
+  <button id="btnPrev" title="Previous step (Left)">&#x25C0;</button>
+  <button id="btnPlay" class="play" title="Play / pause (Space)">&#x25B6; Play</button>
+  <button id="btnNext" title="Next step (Right)">&#x25B6;</button>
+  <button id="btnEnd" title="Last step (End)">&#x23ED;</button>
+  <input type="range" id="scrub" min="0" max="0" value="0" aria-label="Step">
+  <span id="stepLabel" class="mono">0 / 0</span>
+  <label class="speed">speed <input type="range" id="speed" min="1" max="30" value="6"></label>
+</section>
+
+<section id="eventBar" class="eventbar mono"></section>
+
+<main>
+  <section class="panel source-panel">
+    <h2>Input <small id="cursorInfo" class="mono"></small></h2>
+    <pre id="source" class="mono"></pre>
+    <div id="errorBox" class="errorbox mono" hidden></div>
+    <div class="legend">
+      <span class="tok tok-punct">{ } [ ] : ,</span>
+      <span class="tok tok-string">"string"</span>
+      <span class="tok tok-number">number</span>
+      <span class="tok tok-literal">true false null</span>
+    </div>
+  </section>
+
+  <section class="panel stack-panel">
+    <h2>Call stack <small>grammar rule &rarr; C++ function</small></h2>
+    <div id="stack" class="stack"></div>
+    <h2 class="sub">Event log</h2>
+    <ol id="log" class="log mono"></ol>
+  </section>
+
+  <section class="panel tree-panel">
+    <h2>Parse tree <small>JsonValue subclasses</small></h2>
+    <div id="treeWrap" class="tree-wrap">
+      <div id="tree" class="tree">
+        <svg id="edges" class="edges"></svg>
+      </div>
+    </div>
+    <div class="legend classes">
+      <span class="cls-JsonObject">JsonObject</span>
+      <span class="cls-JsonArray">JsonArray</span>
+      <span class="cls-JsonString">JsonString</span>
+      <span class="cls-JsonNumber">JsonNumber</span>
+      <span class="cls-JsonBool">JsonBool</span>
+      <span class="cls-JsonNull">JsonNull</span>
+    </div>
+  </section>
+</main>
+
+<footer class="mono">
+  Every frame is replayed from <code>jsonparser --trace</code> output (see <code>scripts/gen-traces.mjs</code>).
+  Keys: Space play/pause, &larr; &rarr; step, Home/End.
+</footer>
+
+<script src="traces.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

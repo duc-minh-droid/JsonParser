@@ -1,5 +1,7 @@
 # JsonParser
 
+**Live demo:** https://jsonparser-pink.vercel.app
+
 A small recursive-descent JSON parser in C++17 that builds a tree of `JsonValue` subclasses, reports errors as `line:col`, and can record every step it takes so a web page can replay the parse.
 
 ![Visualizer replaying a parse: source cursor on the left, call stack in the middle, JsonValue tree on the right](docs/media/demo.gif)

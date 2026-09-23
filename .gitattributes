@@ -61,3 +61,7 @@
 #*.PDF   diff=astextplain
 #*.rtf   diff=astextplain
 #*.RTF   diff=astextplain
+
+# Test inputs must keep their exact bytes (no CRLF conversion)
+tests/conformance/*.json -text
+samples/*.json text eol=lf

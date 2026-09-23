@@ -1,0 +1,105 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="330" viewBox="0 0 1100 330" font-family="Consolas, 'JetBrains Mono', ui-monospace, monospace">
+<style>
+  .bg { fill: #ffffff; }
+  text { white-space: pre; }
+  .box { fill: #f6f8fa; stroke: #57606a; stroke-width: 1.4; }
+  .hl { fill: #e6efff; }
+  .code { fill: #fff8e6; }
+  .web { fill: #eefbef; }
+  .name { fill: #1f2328; font-size: 14px; font-weight: 700; }
+  .m { fill: #1f2328; font-size: 12px; }
+  .dim { fill: #6e7781; font-size: 11.5px; }
+  .k { fill: #0550ae; font-size: 11.5px; }
+  .s { fill: #1a7f37; font-size: 11.5px; }
+  .e { fill: #cf222e; font-size: 11.5px; }
+  .title { fill: #1f2328; font-size: 16px; font-weight: 700; font-family: system-ui, sans-serif; }
+  .note { fill: #6e7781; font-size: 12px; font-family: system-ui, sans-serif; }
+  .flow { fill: none; stroke: #57606a; stroke-width: 1.8; }
+  .head { fill: #57606a; }
+  .lbl { fill: #57606a; font-size: 11.5px; font-family: system-ui, sans-serif; }
+  .pane { fill: #ffffff; stroke: #8c959f; stroke-width: 1; }
+  @media (prefers-color-scheme: dark) {
+    .bg { fill: #0d1117; }
+    .box { fill: #161b22; stroke: #8b949e; }
+    .hl { fill: #17233b; } .code { fill: #221d10; } .web { fill: #13241a; }
+    .name, .m, .title { fill: #e6edf3; }
+    .dim, .note, .lbl { fill: #8b949e; }
+    .k { fill: #7aa2f7; } .s { fill: #9ece6a; } .e { fill: #f7768e; }
+    .flow { stroke: #8b949e; } .head { fill: #8b949e; }
+    .pane { fill: #0d1117; stroke: #6e7681; }
+  }
+</style>
+<rect class="bg" width="1100" height="330" rx="10"/>
+<text class="title" x="24" y="32">How the visualizer is driven by the real parser</text>
+<text class="note" x="24" y="52">No parsing happens in the browser: every frame is one event the C++ parser emitted while it ran.</text>
+
+<!-- 1 input -->
+<rect class="box" x="24" y="84" width="150" height="120" rx="8"/>
+<text class="name" x="99" y="106" text-anchor="middle">samples/*.json</text>
+<text class="m" x="38" y="134">{"id": 7,</text>
+<text class="m" x="38" y="152"> "tags": ["a",</text>
+<text class="m" x="38" y="170">   "b" "c"]}</text>
+<text class="dim" x="38" y="192">valid + broken</text>
+
+<path class="flow" d="M174 144 H212"/><path class="head" d="M220 144 l-10 -5 v10 z"/>
+
+<!-- 2 parser -->
+<rect class="box hl" x="222" y="72" width="236" height="148" rx="8"/>
+<text class="name" x="340" y="96" text-anchor="middle">jsonparser --trace</text>
+<text class="m" x="236" y="122">JsonParser::parse()</text>
+<text class="dim" x="236" y="142">Rule guard  -> enter / exit</text>
+<text class="dim" x="236" y="160">token()     -> token</text>
+<text class="dim" x="236" y="178">node()      -> node</text>
+<text class="dim" x="236" y="196">failAt()    -> error</text>
+<text class="dim" x="236" y="212">no-op when no JsonTrace attached</text>
+
+<path class="flow" d="M458 144 H496"/><path class="head" d="M504 144 l-10 -5 v10 z"/>
+<text class="lbl" x="477" y="134" text-anchor="middle">stdout</text>
+
+<!-- 3 trace json -->
+<rect class="box code" x="506" y="66" width="296" height="176" rx="8"/>
+<text class="name" x="654" y="88" text-anchor="middle">trace JSON</text>
+<text class="m" x="518" y="112">{"input": "...", "ok": false,</text>
+<text class="m" x="518" y="128"> "events": [</text>
+<text class="k" x="526" y="146">{"ev":"enter","rule":"array",...}</text>
+<text class="k" x="526" y="162">{"ev":"token","tok":"STRING",</text>
+<text class="k" x="526" y="176"> "start":17,"end":20,"line":3,...}</text>
+<text class="s" x="526" y="194">{"ev":"node","cls":"JsonString",</text>
+<text class="s" x="526" y="208"> "parent":2,"index":1,...}</text>
+<text class="e" x="526" y="226">{"ev":"error","line":3,"col":21,...}</text>
+
+<path class="flow" d="M802 144 H840"/><path class="head" d="M848 144 l-10 -5 v10 z"/>
+
+<!-- 4 web -->
+<rect class="box web" x="850" y="66" width="226" height="176" rx="8"/>
+<text class="name" x="963" y="88" text-anchor="middle">web/index.html</text>
+<rect class="pane" x="864" y="102" width="62" height="96" rx="4"/>
+<rect class="pane" x="932" y="102" width="50" height="96" rx="4"/>
+<rect class="pane" x="988" y="102" width="74" height="96" rx="4"/>
+<text class="dim" x="895" y="214" text-anchor="middle">source</text>
+<text class="dim" x="957" y="214" text-anchor="middle">stack</text>
+<text class="dim" x="1025" y="214" text-anchor="middle">tree</text>
+<rect x="870" y="118" width="22" height="6" rx="2" fill="#7aa2f7"/>
+<rect x="870" y="132" width="44" height="6" rx="2" fill="#9ece6a" opacity=".8"/>
+<rect x="870" y="146" width="34" height="6" rx="2" fill="#f7768e"/>
+<rect x="938" y="178" width="38" height="12" rx="2" fill="#7aa2f7" opacity=".5"/>
+<rect x="938" y="162" width="38" height="12" rx="2" fill="#bb9af7" opacity=".5"/>
+<rect x="938" y="146" width="38" height="12" rx="2" fill="#f7768e" opacity=".7"/>
+<rect x="994" y="140" width="20" height="10" rx="2" fill="#7aa2f7"/>
+<rect x="1034" y="116" width="20" height="10" rx="2" fill="#ff9e64"/>
+<rect x="1034" y="152" width="20" height="10" rx="2" fill="#bb9af7"/>
+<path d="M1014 145 C1024 145 1024 121 1034 121 M1014 145 C1024 145 1024 157 1034 157" fill="none" stroke="#8c959f"/>
+<text class="dim" x="963" y="234" text-anchor="middle">state(i) = fold(events[0..i])</text>
+
+<!-- regeneration -->
+<rect class="box" x="506" y="266" width="296" height="44" rx="8"/>
+<text class="name" x="654" y="286" text-anchor="middle">node scripts/gen-traces.mjs</text>
+<text class="dim" x="654" y="302" text-anchor="middle">once per sample: run, collect, bundle</text>
+<path class="flow" d="M506 288 H340 V230" stroke-dasharray="5 4"/>
+<path class="head" d="M340 222 l-5 10 h10 z"/>
+<text class="lbl" x="420" y="280" text-anchor="middle">runs the binary</text>
+<path class="flow" d="M802 288 H963 V252" stroke-dasharray="5 4"/>
+<path class="head" d="M963 244 l-5 10 h10 z"/>
+<text class="lbl" x="880" y="280" text-anchor="middle">writes web/traces.js</text>
+<text class="lbl" x="1076" y="306" text-anchor="end">or open any trace via "Load trace..."</text>
+</svg>

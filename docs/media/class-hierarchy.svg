@@ -1,0 +1,151 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="560" viewBox="0 0 1100 560" font-family="Consolas, 'JetBrains Mono', ui-monospace, monospace">
+<style>
+  .bg { fill: #ffffff; }
+  .box { fill: #f6f8fa; stroke: #57606a; stroke-width: 1.4; }
+  .head { fill: #e6efff; stroke: #57606a; stroke-width: 1.4; }
+  .abstract { fill: #efe6ff; }
+  .aux { fill: #fff8e6; }
+  .err { fill: #ffebee; }
+  .name { fill: #1f2328; font-size: 14px; font-weight: 700; }
+  .it { font-style: italic; }
+  .m { fill: #1f2328; font-size: 12px; }
+  .dim { fill: #6e7781; font-size: 11.5px; }
+  .title { fill: #1f2328; font-size: 16px; font-weight: 700; font-family: system-ui, sans-serif; }
+  .note { fill: #6e7781; font-size: 12px; font-family: system-ui, sans-serif; }
+  .line { fill: none; stroke: #57606a; stroke-width: 1.5; }
+  .own { fill: none; stroke: #8250df; stroke-width: 1.6; stroke-dasharray: 6 4; }
+  .uses { fill: none; stroke: #bf8700; stroke-width: 1.5; stroke-dasharray: 4 4; }
+  .tri { fill: #ffffff; stroke: #57606a; stroke-width: 1.5; }
+  .dia { fill: #8250df; }
+  .arr { fill: #bf8700; }
+  .ownt { fill: #8250df; font-size: 12px; }
+  .usest { fill: #9a6700; font-size: 12px; }
+  .c-obj { fill: #3f6fd8; } .c-arr { fill: #8250df; } .c-str { fill: #1a7f37; }
+  .c-num { fill: #bc4c00; } .c-bool { fill: #0969da; } .c-null { fill: #57606a; }
+  @media (prefers-color-scheme: dark) {
+    .bg { fill: #0d1117; }
+    .box { fill: #161b22; stroke: #8b949e; }
+    .head { fill: #17233b; stroke: #8b949e; }
+    .abstract { fill: #251b3d; }
+    .aux { fill: #2a2413; }
+    .err { fill: #3a1d24; }
+    .name, .m, .title { fill: #e6edf3; }
+    .dim, .note { fill: #8b949e; }
+    .line { stroke: #8b949e; }
+    .tri { fill: #0d1117; stroke: #8b949e; }
+    .own { stroke: #bb9af7; } .dia { fill: #bb9af7; } .ownt { fill: #bb9af7; }
+    .uses { stroke: #e0af68; } .arr { fill: #e0af68; } .usest { fill: #e0af68; }
+    .c-obj { fill: #7aa2f7; } .c-arr { fill: #bb9af7; } .c-str { fill: #9ece6a; }
+    .c-num { fill: #ff9e64; } .c-bool { fill: #7dcfff; } .c-null { fill: #a9b1d6; }
+  }
+</style>
+<rect class="bg" width="1100" height="560" rx="10"/>
+<text class="title" x="24" y="32">JsonValue class hierarchy</text>
+<text class="note" x="24" y="52">Every parse returns std::unique_ptr&lt;JsonValue&gt;; containers own their children, so dropping the root frees the whole tree.</text>
+
+<!-- JsonType enum -->
+<rect class="box aux" x="24" y="80" width="170" height="150" rx="6"/>
+<rect class="head aux" x="24" y="80" width="170" height="40" rx="6"/>
+<text class="dim" x="109" y="96" text-anchor="middle">«enum»</text>
+<text class="name" x="109" y="113" text-anchor="middle">JsonType</text>
+<text class="m" x="38" y="142">NUMBER  STRING</text>
+<text class="m" x="38" y="162">BOOL    OBJECT</text>
+<text class="m" x="38" y="182">ARRAY   NULLL</text>
+<text class="dim" x="38" y="208">tag checked before</text>
+<text class="dim" x="38" y="222">dynamic_cast</text>
+<path class="line" d="M194 150 H250" stroke-dasharray="3 3"/>
+<text class="dim" x="199" y="142">tag</text>
+
+<!-- JsonValue -->
+<rect class="box abstract" x="250" y="80" width="290" height="136" rx="6"/>
+<rect class="head abstract" x="250" y="80" width="290" height="40" rx="6"/>
+<text class="dim" x="395" y="96" text-anchor="middle">«abstract base»</text>
+<text class="name it" x="395" y="113" text-anchor="middle">JsonValue</text>
+<text class="m" x="266" y="144">- type : JsonType</text>
+<text class="m" x="266" y="166">+ getType() : JsonType</text>
+<text class="m" x="266" y="186">+ setType(JsonType)</text>
+<text class="m" x="266" y="206">+ virtual ~JsonValue()</text>
+
+<!-- JsonParser / trace / error -->
+<rect class="box" x="610" y="80" width="306" height="178" rx="6"/>
+<rect class="head" x="610" y="80" width="306" height="32" rx="6"/>
+<text class="name" x="763" y="102" text-anchor="middle">JsonParser</text>
+<text class="m" x="624" y="132">+ parse() : unique_ptr&lt;JsonValue&gt;</text>
+<text class="m" x="624" y="152">+ setTrace(JsonTrace*)</text>
+<text class="dim" x="624" y="174">- parseValue()  parseObject()</text>
+<text class="dim" x="624" y="192">- parseArray()  parseStringLiteral()</text>
+<text class="dim" x="624" y="210">- parseNumber() expectLiteral()</text>
+<text class="dim" x="624" y="232">one function per grammar rule;</text>
+<text class="dim" x="624" y="248">recursion depth capped at 512</text>
+
+<path class="uses" d="M610 150 H548"/>
+<path class="arr" d="M540 150 l10 -5 v10 z"/>
+<text class="usest" x="552" y="142">creates</text>
+
+<rect class="box aux" x="946" y="80" width="130" height="64" rx="6"/>
+<text class="name" x="1011" y="104" text-anchor="middle">JsonTrace</text>
+<text class="dim" x="1011" y="124" text-anchor="middle">events (--trace)</text>
+<rect class="box err" x="946" y="164" width="130" height="64" rx="6"/>
+<text class="name" x="1011" y="188" text-anchor="middle">JsonParseError</text>
+<text class="dim" x="1011" y="208" text-anchor="middle">line, col, offset</text>
+<path class="uses" d="M916 112 H938 M916 196 H938"/>
+<path class="arr" d="M946 112 l-10 -5 v10 z M946 196 l-10 -5 v10 z"/>
+<text class="usest" x="1011" y="246" text-anchor="middle">records / throws</text>
+
+<!-- inheritance bus -->
+<path class="tri" d="M395 216 l-9 16 h18 z"/>
+<path class="line" d="M395 232 V290 M107 290 H1003"/>
+<path class="line" d="M107 290 V380 M286 290 V380 M465 290 V380 M644 290 V380 M823 290 V380 M1003 290 V380" />
+<text class="dim" x="415" y="282">inherits</text>
+
+<!-- leaf and container classes -->
+<g>
+  <rect class="box" x="24" y="380" width="166" height="96" rx="6"/>
+  <rect class="head" x="24" y="380" width="166" height="32" rx="6"/>
+  <text class="name c-null" x="107" y="402" text-anchor="middle">JsonNull</text>
+  <text class="m" x="36" y="434">+ isNull() : bool</text>
+  <text class="dim" x="36" y="462">"null"</text>
+
+  <rect class="box" x="203" y="380" width="166" height="96" rx="6"/>
+  <rect class="head" x="203" y="380" width="166" height="32" rx="6"/>
+  <text class="name c-bool" x="286" y="402" text-anchor="middle">JsonBool</text>
+  <text class="m" x="215" y="434">- value : bool</text>
+  <text class="m" x="215" y="454">+ getValue()</text>
+
+  <rect class="box" x="382" y="380" width="166" height="96" rx="6"/>
+  <rect class="head" x="382" y="380" width="166" height="32" rx="6"/>
+  <text class="name c-num" x="465" y="402" text-anchor="middle">JsonNumber</text>
+  <text class="m" x="394" y="434">- value : double</text>
+  <text class="m" x="394" y="454">+ getValue()</text>
+
+  <rect class="box" x="561" y="380" width="166" height="96" rx="6"/>
+  <rect class="head" x="561" y="380" width="166" height="32" rx="6"/>
+  <text class="name c-str" x="644" y="402" text-anchor="middle">JsonString</text>
+  <text class="m" x="573" y="434">- value : string</text>
+  <text class="m" x="573" y="454">+ getValue()</text>
+  <text class="dim" x="573" y="470">decoded UTF-8</text>
+
+  <rect class="box" x="740" y="380" width="166" height="124" rx="6"/>
+  <rect class="head" x="740" y="380" width="166" height="32" rx="6"/>
+  <text class="name c-arr" x="823" y="402" text-anchor="middle">JsonArray</text>
+  <text class="m" x="752" y="432">- members : vector&lt;</text>
+  <text class="m" x="752" y="448">  unique_ptr&lt;JsonValue&gt;&gt;</text>
+  <text class="m" x="752" y="472">+ add()  size()</text>
+  <text class="m" x="752" y="490">+ operator[](int)</text>
+
+  <rect class="box" x="919" y="380" width="166" height="124" rx="6"/>
+  <rect class="head" x="919" y="380" width="166" height="32" rx="6"/>
+  <text class="name c-obj" x="1002" y="402" text-anchor="middle">JsonObject</text>
+  <text class="m" x="931" y="432">- members : vector&lt;</text>
+  <text class="m" x="931" y="448">  pair&lt;string, ...&gt;&gt;</text>
+  <text class="m" x="931" y="472">+ add() get() has()</text>
+  <text class="m" x="931" y="490">+ remove() size()</text>
+</g>
+
+<!-- ownership: containers hold child JsonValues -->
+<path class="own" d="M823 514 V534 H1002 V514"/>
+<path class="own" d="M740 534 H823"/>
+<path class="dia" d="M823 504 l-6 10 6 10 6 -10 z"/>
+<path class="dia" d="M1002 504 l-6 10 6 10 6 -10 z"/>
+<text class="ownt" x="732" y="538" text-anchor="end">each child is a unique_ptr&lt;JsonValue&gt;: any of the six classes, nested to any depth</text>
+</svg>

@@ -14,7 +14,7 @@ public:
 		members.push_back(std::move(value));
 	};
 
-	int size() const { return members.size(); };
+	int size() const { return static_cast<int>(members.size()); };
 
 	JsonValue& operator[] (int index) {
 		return *members[index];

@@ -1,5 +1,10 @@
+#include <charconv>
+#include <cstring>
+#include <fstream>
 #include <iostream>
+#include <iterator>
 #include <memory>
+#include <sstream>
 #include "JsonValue.h"
 #include "JsonObject.h"
 #include "JsonNumber.h"
@@ -17,13 +22,20 @@ void printIndent(int indent) {
     }
 }
 
+// Shortest decimal form that round-trips back to the same double.
+std::string formatNumber(double v) {
+    char buf[32];
+    auto res = std::to_chars(buf, buf + sizeof buf, v);
+    return std::string(buf, res.ptr);
+}
+
 void printValue(const JsonValue& val, int indent) {
     switch (val.getType()) {
         case JsonType::NUMBER:
-            std::cout << dynamic_cast<const JsonNumber&>(val).getValue();
+            std::cout << formatNumber(dynamic_cast<const JsonNumber&>(val).getValue());
             break;
         case JsonType::STRING:
-            std::cout << "\"" << dynamic_cast<const JsonString&>(val).getValue() << "\"";
+            std::cout << "\"" << jsonEscape(dynamic_cast<const JsonString&>(val).getValue()) << "\"";
             break;
         case JsonType::BOOL:
             std::cout << (dynamic_cast<const JsonBool&>(val).getValue() ? "true" : "false");
@@ -33,6 +45,7 @@ void printValue(const JsonValue& val, int indent) {
             break;
         case JsonType::ARRAY: {
             const JsonArray& arr = dynamic_cast<const JsonArray&>(val);
+            if (arr.size() == 0) { std::cout << "[]"; break; }
             std::cout << "[\n";
             for (int i = 0; i < arr.size(); i++) {
                 printIndent(indent + 1);
@@ -46,11 +59,12 @@ void printValue(const JsonValue& val, int indent) {
         }
         case JsonType::OBJECT: {
             const JsonObject& obj = dynamic_cast<const JsonObject&>(val);
+            if (obj.size() == 0) { std::cout << "{}"; break; }
             std::cout << "{\n";
             int count = 0;
             for (const auto& pair : obj) {
                 printIndent(indent + 1);
-                std::cout << "\"" << pair.first << "\": ";
+                std::cout << "\"" << jsonEscape(pair.first) << "\": ";
                 printValue(*pair.second, indent + 1);
                 if (++count < obj.size()) std::cout << ",";
                 std::cout << "\n";
@@ -65,21 +79,20 @@ void printValue(const JsonValue& val, int indent) {
 void testParse(const std::string& testName, const std::string& jsonStr) {
     std::cout << "=== " << testName << " ===\n";
     std::cout << "Input: " << jsonStr << "\n";
-    
+
     JsonParser parser(jsonStr);
-    auto result = parser.parse();
-    
-    if (result) {
+    try {
+        auto result = parser.parse();
         std::cout << "Parsed successfully:\n";
         printValue(*result, 0);
         std::cout << "\n";
-    } else {
-        std::cout << "Parse FAILED!\n";
+    } catch (const JsonParseError& e) {
+        std::cout << "Parse FAILED: " << e.what() << "\n";
     }
     std::cout << "\n";
 }
 
-int main()
+int runDemo()
 {
     std::cout << "=== JSON Parser Tests ===\n\n";
 
@@ -108,7 +121,7 @@ int main()
     testParse("Simple Object", "{\"name\": \"John\", \"age\": 30}");
 
     // Test 9: Nested object
-    testParse("Nested Object", 
+    testParse("Nested Object",
         "{\"person\": {\"name\": \"Alice\", \"age\": 25}, \"active\": true}");
 
     // Test 10: Object with array
@@ -143,7 +156,75 @@ int main()
     testParse("Whitespace Test",
         "  {  \"name\"  :  \"test\"  ,  \"value\"  :  123  }  ");
 
+    // Test 19: Error reporting
+    testParse("Missing Colon", "{\"name\" \"test\"}");
+
     std::cout << "=== All Parser Tests Completed! ===\n";
-    
-    return 0;   
+
+    return 0;
+}
+
+void usage() {
+    std::cerr <<
+        "usage: jsonparser [--trace] [FILE | -]\n"
+        "       jsonparser --demo\n"
+        "\n"
+        "  FILE      parse FILE and pretty-print it ('-' reads stdin)\n"
+        "  --trace   print a JSON trace of every token, grammar rule and node\n"
+        "            instead of the value (used by the web visualizer)\n"
+        "  --demo    run the built-in example inputs\n"
+        "\n"
+        "exit status: 0 valid JSON, 1 parse error, 2 usage or I/O error\n";
+}
+
+int main(int argc, char** argv)
+{
+    bool traceMode = false;
+    bool demo = false;
+    const char* path = nullptr;
+
+    for (int i = 1; i < argc; i++) {
+        if (std::strcmp(argv[i], "--trace") == 0) traceMode = true;
+        else if (std::strcmp(argv[i], "--demo") == 0) demo = true;
+        else if (std::strcmp(argv[i], "-h") == 0 || std::strcmp(argv[i], "--help") == 0) { usage(); return 0; }
+        else if (argv[i][0] == '-' && argv[i][1] != '\0') { usage(); return 2; }
+        else if (!path) path = argv[i];
+        else { usage(); return 2; }
+    }
+
+    if (demo || (!path && !traceMode)) return runDemo();
+
+    std::string input;
+    std::string name = (!path || std::strcmp(path, "-") == 0) ? "<stdin>" : path;
+    if (name == "<stdin>") {
+        std::ostringstream ss;
+        ss << std::cin.rdbuf();
+        input = ss.str();
+    } else {
+        std::ifstream in(path, std::ios::binary);
+        if (!in) {
+            std::cerr << "jsonparser: cannot open " << path << "\n";
+            return 2;
+        }
+        input.assign(std::istreambuf_iterator<char>(in), std::istreambuf_iterator<char>());
+    }
+
+    JsonParser parser(input);
+    JsonTrace trace;
+    if (traceMode) parser.setTrace(&trace);
+
+    try {
+        auto result = parser.parse();
+        if (traceMode) {
+            std::cout << trace.toJson(input, nullptr);
+        } else {
+            printValue(*result, 0);
+            std::cout << "\n";
+        }
+        return 0;
+    } catch (const JsonParseError& e) {
+        if (traceMode) std::cout << trace.toJson(input, &e);
+        std::cerr << name << ":" << e.line << ":" << e.column << ": error: " << e.message << "\n";
+        return 1;
+    }
 }

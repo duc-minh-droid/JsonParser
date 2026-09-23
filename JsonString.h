@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include <string_view>
 #include "JsonValue.h"
 
 class JsonString : public JsonValue
